@@ -65,6 +65,17 @@ class BasePage:
         url = self.browser.current_url
         return url
 
+    def get_attributes(self, *loc, attribute: str):
+        """Метод получения аттрибутов элемента
+
+        :param loc: tuple
+        :param attribute: str
+        :return: str
+        """
+
+        element = self.find_element_page(*loc)
+        if element:
+            return element.get_attribute(attribute)
 
 
 
