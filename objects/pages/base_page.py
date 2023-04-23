@@ -1,41 +1,51 @@
 from time import sleep
-
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage:
 
-    def __int__(self, browser, timeout: int = 15):
+    def __init__(self, browser, timeout: int = 15):
         self.browser = browser
         self.browser.implicitly_wait(timeout)
         self.waiting_time = 15
 
-    def wait_for_element_present(self, loc: tuple, waiting_time: int):
-
+    def find_element_page(self, *loc, waiting_time=15):
+        """
+        Метод нахождения элемента на странице
+        :param loc: tuple
+        :param waiting_time: int
+        :return: element
+        """
         try:
-            element = self.browser.WebDriverWait(waiting_time).until(EC.presence_of_element_located(*loc))
+            element = WebDriverWait(self.browser, waiting_time).until(EC.presence_of_element_located(*loc))
             return element
         except:
-            raise Exception("")
+            raise Exception("Element is absent!")
 
-    def find_element(self, loc):
+    def send_value(self, *loc, value):
+        """
+        Метод заполнения поля
+        :param loc: tuple
+        :param value: str
+        :return:
+        """
+        return self.find_element_page(*loc).send_keys(value)
 
-        try:
-            elem = self.wait_for_element_present(*loc, waiting_time=self.waiting_time).find_element()
-            return elem
-        except:
-            raise Exception("")
-
-    def send_value(self, loc, value):
-
-        return self.find_element(*loc).send_keys(value)
-
-    def clicker(self, loc):
-
-        self.find_element(loc).click()
+    def clicker(self, *loc):
+        """
+        Метод нажатия на кнопку
+        :param loc: tuple
+        :return:
+        """
+        self.find_element_page(*loc).click()
 
     def go_to_url(self, page_url):
-
+        """
+        Метод перехода по url
+        :param page_url: str
+        :return:
+        """
         try:
             before_url = self.browser.current_url
 
@@ -45,6 +55,16 @@ class BasePage:
             self.browser.get(page_url)
         except:
             raise Exception("")
+
+    def get_current_url(self):
+        """
+        Метод получения текущего url
+        :return: str
+        """
+        sleep(0.2)
+        url = self.browser.current_url
+        return url
+
 
 
 
