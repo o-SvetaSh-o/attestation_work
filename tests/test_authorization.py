@@ -48,7 +48,7 @@ class TestAuthorizationPage:
         page.send_value(AL.USER_NAME_INPUT, value=VALID_LOGIN)
         page.send_value(AL.PASSWORD_INPUT, value=VALID_PASS)
         page.clicker(AL.LOGIN_BTN)
-        assert page.wait_for_element_present(PL.LOGOUT_BTN)
+        assert page.find_element_page(PL.LOGOUT_BTN)
 
     @pytest.mark.parametrize('login, password', [('', ''),
                                                  (VALID_LOGIN, ''),
@@ -59,7 +59,7 @@ class TestAuthorizationPage:
         page.send_value(AL.USER_NAME_INPUT, value=login)
         page.send_value(AL.PASSWORD_INPUT, value=password)
         page.clicker(AL.LOGIN_BTN)
-        assert page.wait_for_element_present(AL.LOGIN_BTN)
+        assert page.find_element_page(AL.LOGIN_BTN)
         assert page.get_current_url().startswith(AUTH_URL)
 
 
