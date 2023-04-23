@@ -55,6 +55,7 @@ class TestAuthorizationPage:
                                                  ('', VALID_PASS)])
     def test_negative_login(self, open_authorization_url, login, password):
         """Негатиная проверка авторизации"""
+
         page = BasePage(open_authorization_url)
         page.send_value(AL.USER_NAME_INPUT, value=login)
         page.send_value(AL.PASSWORD_INPUT, value=password)
@@ -62,4 +63,14 @@ class TestAuthorizationPage:
         assert page.find_element_page(AL.LOGIN_BTN)
         assert page.get_current_url().startswith(AUTH_URL)
 
-
+    @pytest.mark.parametrize('tab', [AL.PHONE_TAB, AL.EMAIL_TAB, AL.LOGIN_TAB, AL.ACCOUNT_TAB])
+    @pytest.mark.parametrize('login', [VALID_LOGIN, '+7 999 888-31-23', 'loginforlogin', '123456789012'])
+    def test_check_changing_tabs_by_input_value(self, open_authorization_url, login, tab):
+        """Параметризированный тест проверки автопереключения табов в зависимости от значения в поле логина"""
+        
+        dct = {VALID_LOGIN: 'mail', '+7 999 888-31-23': 'phone', 'loginforlogin': 'login', '123456789012': 'ls'}
+        page = BasePage(open_authorization_url)
+        page.clicker(tab)
+        page.send_value(AL.USER_NAME_INPUT, value=login)
+        page.clicker(AL.PASSWORD_INPUT)
+        assert dct[login] in page.get_attributes(AL.ACTIVE_TAB, attribute='id')
