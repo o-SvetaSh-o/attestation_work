@@ -18,6 +18,7 @@ def open_authorization_url(browser):
     page.go_to_url(AUTH_URL)
 
 
+@pytest.mark.my_tests
 class TestAuthorizationPage:
 
     def test_open_registration_page(self, open_authorization_url):
@@ -49,6 +50,7 @@ class TestAuthorizationPage:
         page.send_value(AL.PASSWORD_INPUT, value=VALID_PASS)
         page.clicker(AL.LOGIN_BTN)
         assert page.find_element_page(PL.LOGOUT_BTN)
+        page.clicker(PL.LOGOUT_BTN)
 
     @pytest.mark.parametrize('login, password', [('', ''),
                                                  (VALID_LOGIN, ''),
@@ -67,10 +69,12 @@ class TestAuthorizationPage:
     @pytest.mark.parametrize('login', [VALID_LOGIN, '+7 999 888-31-23', 'loginforlogin', '123456789012'])
     def test_check_changing_tabs_by_input_value(self, open_authorization_url, login, tab):
         """Параметризированный тест проверки автопереключения табов в зависимости от значения в поле логина"""
-        
+
         dct = {VALID_LOGIN: 'mail', '+7 999 888-31-23': 'phone', 'loginforlogin': 'login', '123456789012': 'ls'}
         page = BasePage(open_authorization_url)
         page.clicker(tab)
         page.send_value(AL.USER_NAME_INPUT, value=login)
         page.clicker(AL.PASSWORD_INPUT)
         assert dct[login] in page.get_attributes(AL.ACTIVE_TAB, attribute='id')
+
+
