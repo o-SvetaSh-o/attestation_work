@@ -11,7 +11,7 @@ from objects.locators.profile_locators import ProfileLocators as PL
 
 @pytest.fixture(scope='function')
 def open_authorization_url(browser):
-
+    """ Фикстура открытия страницы авторизации"""
     page = BasePage(browser)
     page.go_to_url(AUTH_URL)
     yield browser
@@ -21,7 +21,7 @@ def open_authorization_url(browser):
 class TestAuthorizationPage:
 
     def test_open_registration_page(self, open_authorization_url):
-        """ """
+        """Проверка перехода на страницу регистрации"""
 
         page = BasePage(open_authorization_url)
         page.clicker(AL.REGISTRATION_BTN)
@@ -34,7 +34,7 @@ class TestAuthorizationPage:
                                                 (AL.GOOGLE_REFERENCE_BTN, "https://accounts.google.com/"),
                                                 (AL.YANDEX_REFERENCE_BTN, "https://passport.yandex.ru/")])
     def test_check_reference_links(self, open_authorization_url, links, exp_url):
-        """ """
+        """Проверка перехода на страницы авторизации через соцсети """
 
         page = BasePage(open_authorization_url)
         page.clicker(links)
@@ -42,7 +42,7 @@ class TestAuthorizationPage:
         assert url.startswith(exp_url), f'Url is different.\nUrl: {url}'
 
     def test_positive_login(self, open_authorization_url):
-        """ """
+        """Позитивная проверка авторизации"""
 
         page = BasePage(open_authorization_url)
         page.send_value(AL.USER_NAME_INPUT, value=VALID_LOGIN)
@@ -54,7 +54,7 @@ class TestAuthorizationPage:
                                                  (VALID_LOGIN, ''),
                                                  ('', VALID_PASS)])
     def test_negative_login(self, open_authorization_url, login, password):
-
+        """Негатиная проверка авторизации"""
         page = BasePage(open_authorization_url)
         page.send_value(AL.USER_NAME_INPUT, value=login)
         page.send_value(AL.PASSWORD_INPUT, value=password)
