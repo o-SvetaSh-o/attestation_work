@@ -11,5 +11,5 @@ def browser():
 
     driver = webdriver.Chrome('../chromedriver.exe')
     yield driver
-
     driver.quit()
+
